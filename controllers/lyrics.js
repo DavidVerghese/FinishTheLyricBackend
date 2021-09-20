@@ -1,23 +1,23 @@
-const Lyric = require('../models/product')
+const Lyric = require('../models/lyric')
 const db = require('../db/connection')
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-const getProducts = async (req, res) => {
+const getLyrics = async (req, res) => {
     try {
-        const products = await Lyric.find()
-        res.json(products)
+        const lyrics = await Lyric.find()
+        res.json(lyrics)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
 }
 
-const getProduct = async (req, res) => {
+const getLyric = async (req, res) => {
     try {
         const { id } = req.params
-        const product = await Lyric.findById(id)
-        if (product) {
-            return res.json(product)
+        const lyric = await Lyric.findById(id)
+        if (lyric) {
+            return res.json(lyric)
         }
         res.status(404).json({ message: 'Lyric not found!' })
     } catch (error) {
@@ -25,31 +25,31 @@ const getProduct = async (req, res) => {
     }
 }
 
-const createProduct = async (req, res) => {
+const createLyric = async (req, res) => {
     try {
-        const product = await new Lyric(req.body)
-        await product.save()
-        res.status(201).json(product)
+        const lyric = await new Lyric(req.body)
+        await lyric.save()
+        res.status(201).json(lyric)
     } catch (error) {
         console.log(error)
         res.status(500).json({ error: error.message })
     }
 }
 
-const updateProduct = async (req, res) => {
+const updateLyric = async (req, res) => {
     const { id } = req.params
-    await Lyric.findByIdAndUpdate(id, req.body, { new: true }, (error, product) => {
+    await Lyric.findByIdAndUpdate(id, req.body, { new: true }, (error, lyric) => {
         if (error) {
             return res.status(500).json({ error: error.message })
         }
-        if (!product) {
+        if (!lyric) {
             return res.status(404).json({ message: 'Lyric not found!' })
         }
-        res.status(200).json(product)
+        res.status(200).json(lyric)
     })
 }
 
-const deleteProduct = async (req, res) => {
+const deleteLyric = async (req, res) => {
     try {
         const { id } = req.params;
         const deleted = await Lyric.findByIdAndDelete(id)
@@ -63,9 +63,9 @@ const deleteProduct = async (req, res) => {
 }
 
 module.exports = {
-    createProduct,
-    getProducts,
-    getProduct,
-    updateProduct,
-    deleteProduct
+    createLyric,
+    getLyrics,
+    getLyric,
+    updateLyric,
+    deleteLyric
 }
